@@ -1,0 +1,181 @@
+<html lang="zh-CN" style="font-size: 50px;">
+	<head>
+		<meta charset="utf-8">
+		<title>
+			2022任务之战
+		</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="format-detection" content="telephone=no">
+		<meta name="renderer" content="webkit">
+		<meta name="force-rendering" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="full-screen" content="yes">
+		<meta name="x5-fullscreen" content="true">
+		<meta name="360-fullscreen" content="true">
+		<meta name="screen-orientation" content="portrait">
+		<meta name="x5-orientation" content="portrait">
+		<meta name="x5-page-mode" content="app"> 
+		<link href="//tx2.a.kwimgs.com/udata/pkg/phenix/static/live-h5/css/stars-february.1376bd54.css"  rel="stylesheet">
+	</head>
+	<style>
+		.colorful-card[data-v-0c52c2c8] {
+			margin: .28rem auto;
+			width: 100%;
+			height: auto;
+			border-radius: .32rem;
+			background: #fff url(http://tx2.a.kwimgs.com/udata/pkg/phenix/static/live-h5/img/list-top-bg_2x.fdc22574.png) top/100% no-repeat;
+			position: relative;
+			text-align: center;
+			padding-bottom: .1rem
+		}
+	</style>
+	<body>
+		<div class="app">
+			<div class="main-view">
+				<div class="main-index">
+					<div>
+						<div class="rank">
+							<div data-v-cd3f27ba="" style="padding: 10px 5px 0px 5px;" >
+									<div  data-v-0c52c2c8="" data-v-cd3f27ba="" class="colorful-card rank-module-page" style="margin: 0px;">
+										<div data-v-0c52c2c8="" class="title-content">
+											<div data-v-0c52c2c8="" class="icon-right">
+											</div>
+											<span data-v-0c52c2c8="" class="t">
+												2022任务之战
+											</span>
+											<div data-v-0c52c2c8="" class="icon-left">
+											</div>
+										</div>
+										<div data-v-031cece6="" data-v-cd3f27ba="" class="base-rank-component"
+										data-v-0c52c2c8="">
+											<div data-v-031cece6="" class="content">
+												<div data-v-a58f8db4="" data-v-031cece6="" class="base-rank-component">
+													<div data-v-a58f8db4="" id="list">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+							</div>
+						</div>
+					</div>
+					<!---->
+				</div>
+			</div>
+
+		</div>
+	</body>
+
+<script src="lib/layui-v2.5.5/layui.all.js" charset="utf-8"></script>
+<script src="js/lay-config.js?v=2.0.0" charset="utf-8"></script>
+<script src="js/echarts.min.js" charset="utf-8"></script>
+<script src="js/xm-select.js" charset="utf-8"></script>
+<script src="js/axios.js" charset="utf-8"></script>
+
+<script type="text/html" id="a1">	
+	<div data-v-a58f8db4="">
+		<div data-v-2eb9d57b="" data-v-a58f8db4="" class="zb-rank-item  base-rank-item">
+			<div data-v-2eb9d57b="" class="kw-player-killing" style="border-radius: 8px;">
+				<div class="kw-player-killing__rank-number" style="font-size: 20px;">
+					{{d.id}}
+				</div>
+				<div class="kw-player-killing__rank-profile">
+					<div data-v-53b5b0ce="" data-v-2eb9d57b="" class="avator main-anchor-item">
+						<div data-v-53b5b0ce="" class="kw-avatar" offset="offset">
+							<div class="kw-avatar__content" style="height: 1.44rem; width: 1.44rem; min-width: 1.44rem; max-width: 1.44rem;">
+								<div class="kw-avatar__head" style="height: calc(1.11rem + 0px); width: calc(1.11rem + 0px); background-color: rgb(255, 177, 206); border-radius: 1.44rem;">
+									<img src="{{d.head}}" style="height: calc(1.11rem); width: calc(1.11rem); border-radius: 1.44rem;">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="kw-player-killing__rank-content">
+					<div class="kw-player-killing__user-name">
+						{{d.name}}
+					</div>
+					<div class="kw-player-killing__user-desc">
+						等级:<span data-v-2eb9d57b="">{{d.grade}}
+						</span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						金额:<span data-v-2eb9d57b="">{{d.money}}
+						</span>
+					</div>
+					<div class="kw-player-killing__user-desc">
+						提取时间：
+						<span data-v-2eb9d57b="">
+							{{d.time}}
+						</span>
+					</div>
+				</div>
+				<div data-v-bade14b2="" data-v-2eb9d57b="" class="ks-rank-button">
+					<div data-v-bade14b2="" class="default-button">
+						<div data-v-bade14b2="" class="mask-shine" onclick="get_tycoon({{d.user_id}})">
+							<div data-v-bade14b2="" class="mask">
+							</div>
+						</div>
+						<span data-v-bade14b2="" id="status_user{{d.user_id}}">
+							{{#	if(d.status_user==0){					}}
+								查看
+							{{#	}else{									}}
+								已查看
+							{{#	}										}}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script>
+layui.$.ajax({
+	type: 'POST',//方法类型
+	dataType: "json",//预期服务器返回的数据类型
+	url: '/web0406/api_wzb.php?method=2',
+	success: function (result) {
+		var data=result.data;
+		console.log(data);
+		if (result.code == 0) {
+			var htmls = [''];
+			for(var i=0;i<data.length;i++){
+				data[i].id=i+1;
+				layui.laytpl(a1.innerHTML).render(data[i], function(html){
+					htmls.push(html);
+				});
+			}
+			layui.$('#list').html(htmls.join(''));
+		}else if(result.code == -2){
+			window.location.href='login.html';
+		}
+	},
+	error: function(e) {
+		layui.layer.msg("网络错误!");
+	}
+});
+function get_tycoon(user_id){
+	layui.$.ajax({
+		type: 'POST',//方法类型
+		dataType: "json",//预期服务器返回的数据类型
+		url: '/web0406/api_wzb.php?method=3&user_id='+user_id,
+		success: function (result) {
+			if (result.code == 0) {
+				layui.layer.msg(result.error_msg);
+				layui.$("#status_user"+user_id).html("已查看");
+				window.location.href='kwai://profile/'+user_id;
+			}else{
+				layui.layer.msg("土豪id有误!");
+			}
+		},
+		error: function(e) {
+			layui.layer.msg("网络错误!");
+		}
+	});
+}
+
+</script>
+</html>
