@@ -1,0 +1,244 @@
+<style>
+.table-title {
+	display:none;
+}
+.layui-input-block1 {
+	margin-left: 0px;
+}
+@media screen and (max-width: 900px) {
+	.layui-table-header {
+		display:none;
+	}
+	.table-title {
+		display:inline;
+	}
+	.td_paihang {
+		display:none;
+	}
+	.layui-input-block1 {
+		margin-left: 0px;
+	}
+	.layui-table-body .layui-table1 tbody td:not(:first-child){
+		display:none;
+	}
+	.layui-table-body .layui-table1 {
+		width:100%;
+		table-layout: fixed;
+	}
+	.layui-table-body .layui-table1 tbody td:first-child .layui-table-cell{
+		width:100%;
+		height: 200px !important;
+	}
+	
+}
+.table-title .info_list{
+	display: flex;
+}
+.table-title .info_list .info{
+	width:25%;height: 50px;
+}
+.table-title .info_list .info .info_text{
+	height: 30px;line-height: 30px;text-align: center;
+}
+</style>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">ID/昵称</label>
+					<div class="layui-input-inline">
+						<input type="text" name="username" autocomplete="off" placeholder="UserId/快手Id/昵称" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">性别</label>
+					<div class="layui-input-inline">
+					<select name="key1">
+						<option value="">全部</option>
+						<option value="M">男</option>
+						<option value="F">女</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">等级</label>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" name="key2" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" name="key3" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">等级排序</label>
+					<div class="layui-input-inline">
+					<select name="key4">
+						<option value="0">默认</option>
+						<option value="1">升序</option>
+						<option value="2">降序</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">金额</label>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" name="key5" placeholder="￥" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" name="key6" placeholder="￥" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">金额排序</label>
+					<div class="layui-input-inline">
+					<select name="key7">
+						<option value="0">默认</option>
+						<option value="1">升序</option>
+						<option value="2">降序</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">状态</label>
+					<div class="layui-input-inline">
+					<select name="key8">
+						<option value="">全部</option>
+						<option value="1">已取</option>
+						<option value="0">未取</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">私信</label>
+					<div class="layui-input-inline">
+					<select name="key9">
+						<option value="">全部</option>
+						<option value="0">所有人</option>
+						<option value="1">我关注的人</option>
+						<option value="2">互关的人</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">用户类型</label>
+					<div class="layui-input-inline">
+					<select name="key10">
+						<option value="">全部</option>
+						<option value="0">正常用户</option>
+						<option value="1">隐私用户</option>
+					</select>
+					</div>
+				</div>
+
+				<div class="layui-inline">
+					<button type="submit" class="layui-btn" style="background-color: #ff901b;width:115px;" lay-submit lay-filter="data-search-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+				</div>
+			</div>
+		</div>
+    </div>
+	<div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<table class="layui-hide" id="search" lay-filter="currentTableFilter"></table>
+		</div>
+    </div>
+</div>
+
+<script type="text/html" id="head">
+	<img src="{{ d.head }}?x-oss-process=image/resize,m_fill,w_70,h_70">
+</script>
+<script type="text/html" id="sex">
+	{{#	if(d.sex=="M"){					}}
+	  <span class="layui-badge layui-bg-blue">男</span>
+	{{#	}else if(d.sex=="F"){				}}
+	  <span class="layui-badge">女</span>
+	{{#	}else{							}}
+	  <span class="layui-badge layui-bg-green">未知</span>
+	{{#	}								}}
+</script>
+<script type="text/html" id="status">
+	{{#  if(d.status == "1"){ }} 
+		<span class="layui-badge layui-bg-blue">已取</span>
+	{{#  }else{						}}
+		<span class="layui-badge layui-bg-orange">未取</span>
+	{{#  }							}}
+</script>
+<script type="text/html" id="deny_message_flag">
+	{{#  if(d.deny_message_flag == "0"){ }} 
+		<span class="layui-badge layui-bg-blue">所有</span>
+	{{#  }else if(d.deny_message_flag == "1"){ }} 
+		<span class="layui-badge layui-bg-cyan">关注</span>
+	{{#  }else if(d.deny_message_flag == "2"){						}}
+		<span class="layui-badge layui-bg-orange">互关</span>
+	{{#  }							}}
+</script>
+<script type="text/html" id="privacy_user">
+	{{#  if(d.privacy_user == "0"){ 			}} 
+		<span class="layui-badge layui-bg-blue">正常</span>
+	{{#  }else if(d.privacy_user == "1"){		}} 
+		<span class="layui-badge layui-bg-cyan">隐私</span>
+	{{#  }		}}
+</script>
+<script type="text/html" id="status_user">
+	{{#  if(d.status_user == "0"){ 			}} 
+		<span class="layui-badge layui-bg-blue">未查</span>
+	{{#  }else if(d.status_user == "1"){		}} 
+		<span class="layui-badge layui-bg-orange">已查</span>
+	{{#  }		}}
+</script>
+<script>
+search=layui.table.render({
+	elem: '#search'
+	,cols: [[ //标题栏
+		{field: '', title: '序号',type:'numbers',minWidth:100}
+		,{field: 'user_id', title: 'userid',minWidth:120}
+		,{field: 'kwai_id', title: '快手id',minWidth:170}
+		,{field: 'head', title: '头像',templet: '#head',minWidth:120}
+		,{field: 'name', title: '昵称',minWidth:150}
+		,{field: 'sex', title: '性别',templet: '#sex',minWidth:80}
+		,{field: 'works_count', title: '作品数量',minWidth:120}
+		,{field: 'fan_count', title: '粉丝数量',minWidth:120}
+		,{field: 'grade', title: '等级',minWidth:80}
+		,{field: 'money', title: '金额',minWidth:120}
+		,{field: 'status', title: '状态',templet: '#status',minWidth:120}
+		,{field: 'status_user', title: '查看',templet: '#status_user',minWidth:120}
+		,{field: 'deny_message_flag', title: '私信状态',templet: '#deny_message_flag',minWidth:80}
+		,{field: 'privacy_user', title: '用户类型',templet: '#privacy_user',minWidth:120}
+		,{field: 'extract_time', title: '分配时间',minWidth:180}
+		,{field: 'extract_user_id', title: '分配用户',minWidth:180}
+	]]
+	,url:'/web0406/admin/api_wzb.php?method=7'
+	,skin: 'nob' //表格风格
+	,size: 'lg' //小尺寸的表格
+	//,even: true//开启隔行背景
+	,limits: [10, 15, 20, 25, 50]
+	,limit: 15
+	,page: true
+	,done: function (res, curr, count) {
+		layui.$('td .layui-table-cell').css({'height':'80px','line-height':'80px'});
+		layui.$('.layui-table-view[lay-id="user"] .layui-table').addClass('layui-table1');
+		layui.$('.layui-table-page').css({'text-align':'center','height':'40px'});
+	}
+});
+
+layui.form.render();
+
+layui.form.on('submit(data-search-btn)', function (data) {
+	var result = JSON.stringify(data.field);
+	//执行搜索重载
+	layui.table.reload('search', {
+		page: {
+			curr: 1
+		}
+		, where: {
+			key: result
+		}
+	}, 'data');
+
+	return false;
+});
+
+
+</script>

@@ -1,0 +1,205 @@
+<style>
+.table-title {
+	display:none;
+}
+.layui-input-block1 {
+	margin-left: 0px;
+}
+@media screen and (max-width: 900px) {
+	.layui-table-header {
+		display:none;
+	}
+	.table-title {
+		display:inline;
+	}
+	.td_paihang {
+		display:none;
+	}
+	.layui-input-block1 {
+		margin-left: 0px;
+	}
+	.layui-table-body .layui-table1 tbody td:not(:first-child){
+		display:none;
+	}
+	.layui-table-body .layui-table1 {
+		width:100%;
+		table-layout: fixed;
+	}
+	.layui-table-body .layui-table1 tbody td:first-child .layui-table-cell{
+		width:100%;
+		height: 200px !important;
+	}
+	
+}
+.table-title .info_list{
+	display: flex;
+}
+.table-title .info_list .info{
+	width:25%;height: 50px;
+}
+.table-title .info_list .info .info_text{
+	height: 30px;line-height: 30px;text-align: center;
+}
+</style>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<div class="layui-form-item">
+				<label class="layui-form-label">主播过滤：</label>
+				<div class="layui-inline">
+					<label class="layui-form-label">地区</label>
+					<div class="layui-input-inline">
+						<select id="region_name" name="region_name">
+						</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">性别</label>
+					<div class="layui-input-inline">
+						<select id="region_sex" name="region_sex">
+						</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<button type="submit" class="layui-btn" style="background-color: #ff901b;width:115px;" lay-submit lay-filter="set-anchor"><i class="layui-icon">&#xe669;</i>保存</button>
+				</div>
+			</div>
+		</div>
+    </div>
+    <div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<div class="layui-form-item">
+				<label class="layui-form-label">土豪过滤：</label>
+				<div class="layui-inline">
+					<label class="layui-form-label">性别</label>
+					<div class="layui-input-inline">
+						<select id="tycoon_sex" name="tycoon_sex">
+						</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">等级</label>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" id="tycoon_grade1" name="tycoon_grade1" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" id="tycoon_grade2" name="tycoon_grade2" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">金额</label>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" id="tycoon_money1" placeholder="￥" name="tycoon_money1" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline" style="width: 100px;">
+						<input type="text" id="tycoon_money2" placeholder="￥" name="tycoon_money2" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<button type="submit" class="layui-btn" style="background-color: #ff901b;width:115px;" lay-submit lay-filter="set-tycoon"><i class="layui-icon">&#xe669;</i>保存</button>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+<script>
+
+layui.$.ajax({
+	type: 'POST',//方法类型
+	dataType: "json",//预期服务器返回的数据类型
+	url: '/web0406/admin/api_wzb.php?method=10',
+	success: function (result) {
+		if (result.code == 0) {
+			var data=result.data;
+			var data2=result.data2;
+			var html = [''];	
+			for(var i=0;i<data.length;i++){
+				if(i==0){
+					html.push('<option value="'+data[i]+'" selected="selected">'+data[i]+'</option>');
+				}else{
+					html.push('<option value="'+data[i]+'">'+data[i]+'</option>');
+				}
+			}
+			layui.$('#region_name').html(html.join(''));
+			
+			var html = [''];	
+			if(data2.region_sex=="F"){
+				html.push('<option value="" >全部</option>');
+				html.push('<option value="M">男</option>');
+				html.push('<option value="F" selected="selected">女</option>');
+			}else if(data2.region_sex=="M"){
+				html.push('<option value="">全部</option>');
+				html.push('<option value="M" selected="selected">男</option>');
+				html.push('<option value="F">女</option>');
+			}else{
+				html.push('<option value="" selected="selected">全部</option>');
+				html.push('<option value="M">男</option>');
+				html.push('<option value="F">女</option>');
+			}
+			layui.$('#region_sex').html(html.join(''));
+			
+			var html = [''];	
+			if(data2.tycoon_sex=="F"){
+				html.push('<option value="" >全部</option>');
+				html.push('<option value="M">男</option>');
+				html.push('<option value="F" selected="selected">女</option>');
+			}else if(data2.tycoon_sex=="M"){
+				html.push('<option value="">全部</option>');
+				html.push('<option value="M" selected="selected">男</option>');
+				html.push('<option value="F">女</option>');
+			}else{
+				html.push('<option value="" selected="selected">全部</option>');
+				html.push('<option value="M">男</option>');
+				html.push('<option value="F">女</option>');
+			}
+			layui.$('#tycoon_sex').html(html.join(''));
+			
+			layui.$('#tycoon_grade1').val(data2.tycoon_grade1);
+			layui.$('#tycoon_grade2').val(data2.tycoon_grade2);
+			layui.$('#tycoon_money1').val(data2.tycoon_money1);
+			layui.$('#tycoon_money2').val(data2.tycoon_money2);
+			
+			layui.form.render();
+			layui.$('select').select();
+		}
+	},
+	error: function(e) {
+		layui.layer.msg("网络错误!");
+	}
+});
+
+
+//主播过滤保存
+layui.form.on('submit(set-anchor)', function (data) {
+	layui.$.ajax({
+		type: 'POST',//方法类型
+		dataType: "json",//预期服务器返回的数据类型
+		url: '/web0406/admin/api_wzb.php?method=11&region_name='+data.field.region_name+'&region_sex='+data.field.region_sex,
+		success: function (result) {
+			layui.layer.msg(result.error_msg);
+		},
+		error: function(e) {
+			layui.layer.msg("网络错误!");
+		}
+	});
+});
+
+
+//土豪过滤保存
+layui.form.on('submit(set-tycoon)', function (data) {
+	layui.$.ajax({
+		type: 'POST',//方法类型
+		dataType: "json",//预期服务器返回的数据类型
+		url: '/web0406/admin/api_wzb.php?method=12&tycoon_sex='+data.field.tycoon_sex+'&tycoon_grade1='+data.field.tycoon_grade1+'&tycoon_grade2='+data.field.tycoon_grade2+'&tycoon_money1='+data.field.tycoon_money1+'&tycoon_money2='+data.field.tycoon_money2,
+		success: function (result) {
+			layui.layer.msg(result.error_msg);
+		},
+		error: function(e) {
+			layui.layer.msg("网络错误!");
+		}
+	});
+});
+
+</script>

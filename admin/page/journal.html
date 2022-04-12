@@ -1,0 +1,196 @@
+<style>
+.table-title {
+	display:none;
+}
+.layui-input-block1 {
+	margin-left: 0px;
+}
+@media screen and (max-width: 900px) {
+	.layui-table-header {
+		display:none;
+	}
+	.table-title {
+		display:inline;
+	}
+	.td_paihang {
+		display:none;
+	}
+	.layui-input-block1 {
+		margin-left: 0px;
+	}
+	.layui-table-body .layui-table1 tbody td:not(:first-child){
+		display:none;
+	}
+	.layui-table-body .layui-table1 {
+		width:100%;
+		table-layout: fixed;
+	}
+	.layui-table-body .layui-table1 tbody td:first-child .layui-table-cell{
+		width:100%;
+		height: 200px !important;
+	}
+	
+}
+.table-title .info_list{
+	display: flex;
+}
+.table-title .info_list .info{
+	width:25%;height: 50px;
+}
+.table-title .info_list .info .info_text{
+	height: 30px;line-height: 30px;text-align: center;
+}
+</style>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">操作事件</label>
+					<div class="layui-input-inline">
+						<input type="text" name="username" autocomplete="off" placeholder="操作事件" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">类型</label>
+					<div class="layui-input-inline">
+						<select name="key1">
+							<option value="">全部</option>
+							<option value="1">分配</option>
+							<option value="2">采集</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">时间范围</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" autocomplete="off" id="date1" name="date1" placeholder="开始日期">
+					</div>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" autocomplete="off" id="date2" name="date2" placeholder="结束日期">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<button type="submit" class="layui-btn" style="background-color: #ff901b;width:115px;" lay-submit lay-filter="data-search-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+				</div>
+			</div>
+		</div>
+    </div>
+	<div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<div style="padding: 0px 4px 10px 10px;height:30px;display: flex;">
+				<div style="width: 100%;">
+					<div style="float: right;">
+						<button type="submit" class="layui-btn layui-btn-danger" lay-submit lay-filter="data-search-delete"><i class="layui-icon">&#xe640;</i>删除24小时前</button>
+					</div>
+				</div>
+			</div>
+			<table class="layui-hide" id="search" lay-filter="currentTableFilter"></table>
+		</div>
+    </div>
+</div>
+<script type="text/html" id="type">
+	{{#	if(d.type==1){						}}
+	  <span class="layui-badge layui-bg-blue">分配</span>
+	{{#	}else if(d.type==2){				}}
+	  <span class="layui-badge">采集</span>
+	{{#	}									}}
+</script>
+
+<script>
+  //日期范围
+layui.laydate.render({
+	elem: '#date1',
+	max: getNowFormatDate(),
+    type: 'datetime'
+});
+layui.laydate.render({
+	elem: '#date2',
+	max: getNowFormatDate(),
+    type: 'datetime'
+});
+function getNowFormatDate() {
+	var date = new Date();
+	var seperator1 = "-";
+	var seperator2 = ":";
+	var month = date.getMonth() + 1;
+	var strDate = date.getDate();
+	if (month >= 1 && month <= 9) {
+		month = "0" + month;
+	}
+	if (strDate >= 0 && strDate <= 9) {
+		strDate = "0" + strDate;
+	}
+	var currentdate = date.getFullYear() + seperator1 + month
+			+ seperator1 + strDate + " " + date.getHours() + seperator2
+			+ date.getMinutes() + seperator2 + date.getSeconds();
+	return currentdate;
+}
+
+search=layui.table.render({
+	elem: '#search'
+	,cols: [[ //标题栏
+		{field: '', width: 120, title: '序号',type:'numbers'}
+		,{field: 'time', title: '操作时间'}
+		,{field: 'type', title: '操作类型',templet: '#type'}
+		,{field: 'operation_event', title: '操作事件'}
+	]]
+	,url:'/web0406/admin/api_wzb.php?method=16'
+	,skin: 'nob' //表格风格
+	,size: 'lg' //小尺寸的表格
+	//,even: true//开启隔行背景
+	,limits: [10, 15, 20, 25, 50]
+	,limit: 15
+	,page: true
+	,done: function (res, curr, count) {
+		//渲染下拉列表
+		
+		layui.$('td .layui-table-cell').css({'height':'20px','line-height':'20px'});
+		layui.$('.layui-table-view[lay-id="user"] .layui-table').addClass('layui-table1');
+		layui.$('.layui-table-page').css({'text-align':'center','height':'40px'});
+	}
+	,id:"search"
+});
+
+layui.form.render();
+
+layui.form.on('submit(data-search-btn)', function (data) {
+	var result = JSON.stringify(data.field);
+	var field=data.field;
+	var oDate1 = new Date(field.date1);
+    var oDate2 = new Date(field.date2);
+    if(oDate1.getTime() > oDate2.getTime()){
+        layer.msg("时间范围有误!");
+    } else {
+		//执行搜索重载
+		layui.table.reload('search', {
+			page: {
+				curr: 1
+			}
+			, where: {
+				key: result
+			}
+		}, 'data');
+    }
+	return false;
+});
+layui.form.on('submit(data-search-delete)', function (data) {
+	layer.confirm('真的删除行么', function (index) {
+		layui.$.ajax({
+			type: 'POST',//方法类型
+			dataType: "json",//预期服务器返回的数据类型
+			url: '/web0406/admin/api_wzb.php?method=17',
+			success: function (result) {
+				layui.layer.msg(result.error_msg);
+				layui.table.reload('search');
+			},
+			error: function(e) {
+				layer.msg("网络错误!");
+			}
+		});
+		layer.close(index);
+	});
+});
+
+
+</script>

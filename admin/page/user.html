@@ -1,0 +1,156 @@
+<style>
+.table-title {
+	display:none;
+}
+.layui-input-block1 {
+	margin-left: 0px;
+}
+@media screen and (max-width: 900px) {
+	.layui-table-header {
+		display:none;
+	}
+	.table-title {
+		display:inline;
+	}
+	.td_paihang {
+		display:none;
+	}
+	.layui-input-block1 {
+		margin-left: 0px;
+	}
+	.layui-table-body .layui-table1 tbody td:not(:first-child){
+		display:none;
+	}
+	.layui-table-body .layui-table1 {
+		width:100%;
+		table-layout: fixed;
+	}
+	.layui-table-body .layui-table1 tbody td:first-child .layui-table-cell{
+		width:100%;
+		height: 200px !important;
+	}
+	
+}
+.table-title .info_list{
+	display: flex;
+}
+.table-title .info_list .info{
+	width:25%;height: 50px;
+}
+.table-title .info_list .info .info_text{
+	height: 30px;line-height: 30px;text-align: center;
+}
+</style>
+<div class="layuimini-container layuimini-page-anim">
+	<div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+            <div class="layui-card-header"><i class="layui-icon">&#xe60a;</i>用户列表</div>
+			<table class="layui-hide" id="search" lay-filter="currentTableFilter"></table>
+		</div>
+    </div>
+	<script type="text/html" id="toolbarDemo">
+		<div class="layui-btn-container">
+			<button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加 </button>
+		</div>
+	</script>
+</div>
+
+<script type="text/html" id="operation">
+	<a class="layui-btn layui-btn-normal layui-btn data-count-edit" lay-event="edit">编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn data-count-delete" lay-event="delete">删除</a>
+</script>
+
+<script>
+
+
+search=layui.table.render({
+	elem: '#search'
+	,toolbar: '#toolbarDemo'
+	,cols: [[ //标题栏
+		{field: 'id', title: 'id',minWidth:100}
+		,{field: 'user_login', title: '主播id登录账号'}
+		,{field: 'name', title: '主播昵称'}
+		,{field: 'daily_push_count', title: '日推数量'}
+		,{field: 'today_push_count', title: '今日已推'}
+		,{field: 'history_push_count', title: '历史总推'}
+		,{field: 'update_time', title: '修改时间'}
+		,{field: 'status', title: '操作',templet: '#operation'}
+	]]
+	,url:'/web0406/admin/api_wzb.php?method=8'
+	,skin: 'nob' //表格风格
+	,size: 'lg' //小尺寸的表格
+	//,even: true//开启隔行背景
+	,limits: [10, 15, 20, 25, 50]
+	,limit: 15
+	,page: true
+	,done: function (res, curr, count) {
+		layui.$('td .layui-table-cell').css({'height':'80px','line-height':'80px'});
+		layui.$('.layui-table-view[lay-id="user"] .layui-table').addClass('layui-table1');
+		layui.$('.layui-table-page').css({'text-align':'center','height':'40px'});
+	}
+	,id:'testReload'
+});
+layui.form.render();
+
+
+layui.table.on('toolbar(currentTableFilter)', function (obj) {
+	if (obj.event === 'add') {  // 监听添加操作
+		var content = layui.miniPage.getHrefContent('page/user-add.html');
+		var openWH = layui.miniPage.getOpenWidthHeight();
+		var index = layer.open({
+			title: '添    加',
+			type: 1,
+			shade: 0.2,
+			maxmin:true,
+			shadeClose: true,
+			area: [openWH[0] + 'px', openWH[1] + 'px'],
+			offset: [openWH[2] + 'px', openWH[3] + 'px'],
+			content: content,
+		});
+		layui.$(window).on("resize", function () {
+			layer.full(index);
+		});
+	}
+});
+
+layui.table.on('tool(currentTableFilter)', function (obj) {
+	var data = obj.data;
+	console.log(data);
+	if (obj.event === 'edit') {
+		var content = layui.miniPage.getHrefContent('page/user-add.html');
+		var openWH = layui.miniPage.getOpenWidthHeight();
+		var index = layer.open({
+			title: '编    辑',
+			type: 1,
+			shade: 0.2,
+			maxmin:true,
+			shadeClose: true,
+			area: [openWH[0] + 'px', openWH[1] + 'px'],
+			offset: [openWH[2] + 'px', openWH[3] + 'px'],
+			content: content,
+		});
+		setData(data.id,data.user_login,data.user_pwd,data.name,data.daily_push_count);
+		layui.$(window).on("resize", function () {
+			layer.full(index);
+		});
+		return false;
+	}else if (obj.event === 'delete') {
+		layer.confirm('真的删除行么', function (index) {
+			layui.$.ajax({
+				type: 'POST',//方法类型
+				dataType: "json",//预期服务器返回的数据类型
+				url: '/web0406/admin/api_wzb.php?method=13&id='+data.id,
+				success: function (result) {
+					if (result.code == 0) {
+						obj.del();
+					}
+				},
+				error: function(e) {
+					layer.msg("网络错误!");
+				}
+			});
+			layer.close(index);
+		});
+	}
+});
+</script>

@@ -1,0 +1,144 @@
+
+<div class="layuimini-container layuimini-page-anim">
+	<div class="layuimini-main">
+		<div class="layui-form layuimini-form">
+			<input type="hidden" id="id" name="id" value=""/>
+			<div class="layui-form-item">
+				<label class="layui-form-label required">主播ID登录账号</label>
+				<div class="layui-input-block">
+					<input type="text" id="user_login" name="user_login" lay-verify="required" lay-reqtext="主播ID登录账号不能为空"  placeholder="请输入主播ID登录账号" value="" class="layui-input"/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label required">主播密码</label>
+				<div class="layui-input-block">
+					<input type="text" id="user_pwd" name="user_pwd" lay-verify="required" lay-reqtext="主播密码不能为空"  placeholder="请输入主播密码" value="" class="layui-input"/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label required">主播昵称</label>
+				<div class="layui-input-block">
+					<input type="text" id="name" name="name" lay-verify="required" lay-reqtext="主播昵称不能为空"  placeholder="请输入主播昵称" value="" class="layui-input"/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label required">日推数量</label>
+				<div class="layui-input-block">
+					<input type="text" id="daily_push_count" name="daily_push_count" lay-verify="required" lay-reqtext="日推数量不能为空"  placeholder="请输入日推数量" value="" class="layui-input"/>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+//设置数据回显
+function setData(id,user_login,user_pwd,name,daily_push_count){
+	layui.$("#id").val(id);
+	layui.$("#user_login").val(user_login);
+	layui.$("#user_login").attr("disabled",true);
+	layui.$("#user_pwd").val(user_pwd);
+	layui.$("#name").val(name);
+	layui.$("#daily_push_count").val(daily_push_count);
+	//layui.$("#anchorId").attr("disabled",true);
+}
+
+layui.form.render();
+
+// 当前弹出层，防止ID被覆盖
+var parentIndex = layui.layer.index;
+//监听提交
+layui.form.on('submit(saveBtn)', function (data) {
+		console.log(data);
+		field=data.field
+		console.log(field);
+		layui.$.ajax({
+			type: 'POST',//方法类型
+			dataType: "json",//预期服务器返回的数据类型
+			url: '/web0406/admin/api_wzb.php?method=9',
+			data: "id="+field.id+"&user_login="+field.user_login+"&user_pwd="+field.user_pwd+"&name="+field.name+"&daily_push_count="+field.daily_push_count,
+			success: function (result) {
+				if (result.code == 0) {
+					layui.layer.msg(result.error_msg);
+					layui.table.reload('testReload');
+					layui.layer.close(parentIndex);
+				} else {
+					layui.layer.msg(result.error_msg);
+				}
+			},
+			error: function(e) {
+				layui.layer.msg("网络错误!");
+			}
+		});
+		/*
+		if(login==""){
+			//添加操作
+			var pwd=data.field.pwd;
+			var pwd2=data.field.pwd2;
+			if(pwd!=pwd2){
+				alert('两次密码输入不一致！');
+				layui.layer.close(index);
+			}else{
+				var name=data.field.name;
+				var login=data.field.login;
+				var pwd=data.field.pwd;
+				var email=data.field.email;
+				var role=data.field.role;
+				var remarks=data.field.remarks;
+				if(role==null || role==""){
+					layui.layer.msg("未选则角色!");
+				}else{
+					layui.$.ajax({
+						type: 'POST',//方法类型
+						dataType: "json",//预期服务器返回的数据类型
+						url: '/api_admin/api.php',
+						data: "type="+"admin_add"+"&name="+name+"&login="+login+"&pwd="+pwd+"&role="+role+"&email="+email+"&remarks="+remarks,
+						success: function (result) {
+							if (result.code == 1) {
+								layui.table.reload('testReload');
+								layui.layer.close(parentIndex);
+							} else {
+								layui.layer.msg(result.msg);
+							}
+						},
+						error: function(e) {
+							layui.layer.msg("网络错误!");
+						}
+					});
+				}
+			}
+		}else{
+			//修改操作
+			var role=data.field.role;
+			if(role==null || role==""){
+				layui.layer.msg("未选则角色!");
+			}else{
+				$.ajax({
+					type: 'POST',//方法类型
+					dataType: "json",//预期服务器返回的数据类型
+					url: '/api_admin/api.php',
+					data: "type="+"admin_update"+"&login="+login+"&role="+role,
+					success: function (result) {
+						if (result.code == 1) {				
+							layui.table.reload('testReload');
+							layui.layer.close(parentIndex);
+						} else {
+							layui.layer.msg(result.msg);
+						}
+					},
+					error: function(e) {
+						layui.layer.msg("网络错误!");
+					}
+				});
+			}
+		}
+		*/
+	return false;
+});
+</script>

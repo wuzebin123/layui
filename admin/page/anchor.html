@@ -1,0 +1,265 @@
+<style>
+.table-title {
+	display:none;
+}
+.layui-input-block1 {
+	margin-left: 0px;
+}
+@media screen and (max-width: 900px) {
+	.layui-table-header {
+		display:none;
+	}
+	.table-title {
+		display:inline;
+	}
+	.td_paihang {
+		display:none;
+	}
+	.layui-input-block1 {
+		margin-left: 0px;
+	}
+	.layui-table-body .layui-table1 tbody td:not(:first-child){
+		display:none;
+	}
+	.layui-table-body .layui-table1 {
+		width:100%;
+		table-layout: fixed;
+	}
+	.layui-table-body .layui-table1 tbody td:first-child .layui-table-cell{
+		width:100%;
+		height: 200px !important;
+	}
+	
+}
+.table-title .info_list{
+	display: flex;
+}
+.table-title .info_list .info{
+	width:25%;height: 50px;
+}
+.table-title .info_list .info .info_text{
+	height: 30px;line-height: 30px;text-align: center;
+}
+</style>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">Id/昵称</label>
+					<div class="layui-input-inline">
+						<input type="text" name="username" autocomplete="off" placeholder="UserId/快手Id/昵称" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">性别</label>
+					<div class="layui-input-inline">
+					<select name="key1">
+						<option value="">全部</option>
+						<option value="M">男</option>
+						<option value="F">女</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">是否符合</label>
+					<div class="layui-input-inline">
+					<select name="key2">
+						<option value="">全部</option>
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">金额排序</label>
+					<div class="layui-input-inline">
+					<select name="key3">
+						<option value="0">默认</option>
+						<option value="1">升序</option>
+						<option value="2">降序</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">地区</label>
+					<div class="layui-input-inline">
+						<select id="region_name" name="key4">
+						</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">是否审核</label>
+					<div class="layui-input-inline">
+					<select name="key5">
+						<option value="">全部</option>
+						<option value="1">已审</option>
+						<option value="0">未审</option>
+					</select>
+					</div>
+				</div>
+				<div class="layui-inline">
+					<button type="submit" class="layui-btn" style="background-color: #ff901b;width:115px;" lay-submit lay-filter="data-search-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+				</div>
+			</div>
+		</div>
+    </div>
+	<div class="layuimini-main">
+		<div style="margin: 10px 10px 10px 10px" class="layui-form">
+			<table class="layui-hide" id="search" lay-filter="currentTableFilter"></table>
+		</div>
+    </div>
+</div>
+<script type="text/html" id="head">
+	<img src="{{ d.head }}?x-oss-process=image/resize,m_fill,w_70,h_70">
+</script>
+<script type="text/html" id="sex">
+	{{#	if(d.sex=="M"){					}}
+	  <span class="layui-badge layui-bg-blue">男</span>
+	{{#	}else if(d.sex=="F"){				}}
+	  <span class="layui-badge">女</span>
+	{{#	}else{							}}
+	  <span class="layui-badge layui-bg-green">未知</span>
+	{{#	}								}}
+</script>
+<script type="text/html" id="status">
+	<input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="sexDemo" {{ d.status == 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="liveimgs">
+	<img src="{{d.liveimg1}}" style="width:70px;" onclick="buttonliveimg('{{d.name}}','{{d.liveimg1}}','{{d.liveimg2}}','{{d.liveimg3}}')">
+</script>
+<script type="text/html" id="examine">
+	{{#	if(d.examine=="1"){					}}
+	  <span class="layui-badge layui-bg-blue">已审</span>
+	{{#	}else if(d.examine=="0"){			}}
+	  <span class="layui-badge">未审</span>
+	{{#	}									}}
+</script>
+<script>
+
+function buttonliveimg(name,liveimg1,liveimg2,liveimg3){
+	var json={"data": []}
+	if(liveimg1!=null && liveimg1!='' && liveimg1!='null'){
+		json.data.push({"alt": name,"src": liveimg1});
+	}
+	if(liveimg2!=null && liveimg2!='' && liveimg2!='null'){
+		json.data.push({"alt": name,"src": liveimg2});
+	}
+	if(liveimg3!=null && liveimg3!='' && liveimg3!='null'){
+		json.data.push({"alt": name,"src": liveimg3});
+	}
+	console.log(json);
+	layer.photos({
+		photos: json
+		,anim:0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+	});
+}
+
+
+
+
+
+
+
+layui.$.ajax({
+	type: 'POST',//方法类型
+	dataType: "json",//预期服务器返回的数据类型
+	url: '/web0406/admin/api_wzb.php?method=15',
+	data: "id="+this.value+"&status="+status,
+	success: function (result) {
+		var data=result.data;
+		var html = [''];	
+		for(var i=0;i<data.length;i++){
+			if(i==0){
+				html.push('<option value="" selected="selected">'+data[i]+'</option>');
+			}else{
+				html.push('<option value="'+data[i]+'">'+data[i]+'</option>');
+			}
+		}
+		layui.$('#region_name').html(html.join(''));
+		layui.form.render();
+		layui.$('select').select();
+		
+	},
+	error: function(e) {
+		layui.layer.msg("网络错误!");
+	}
+});
+
+search=layui.table.render({
+	elem: '#search'
+	,cols: [[ //标题栏
+		{field: '', width: 120, title: '序号',type:'numbers'}
+		,{field: 'user_id', title: 'userid'}
+		,{field: 'kwai_id', title: 'kwaiid'}
+		,{field: 'head', title: '头像',templet: '#head'}
+		,{field: 'name', title: '昵称',minWidth:200}
+		,{field: 'sex', title: '性别',templet: '#sex'}
+		,{field: 'region_name', title: '地区',}
+		,{field: 'autograph', title: '签名'}
+		,{field: 'money', title: '礼物金额'}
+		,{field: 'liveimg', title: '直播截图',templet: '#liveimgs'}
+		,{field: 'update_time', title: '修改时间'}
+		,{field: 'examine', title: '是否审核',templet: '#examine'}
+		,{field: 'status', title: '是否符合',templet: '#status'}
+	]]
+	,url:'/web0406/admin/api_wzb.php?method=5'
+	,skin: 'nob' //表格风格
+	,size: 'lg' //小尺寸的表格
+	//,even: true//开启隔行背景
+	,limits: [10, 15, 20, 25, 50]
+	,limit: 15
+	,page: true
+	,done: function (res, curr, count) {
+		//渲染下拉列表
+		
+		layui.$('td .layui-table-cell').css({'height':'80px','line-height':'80px'});
+		layui.$('.layui-table-view[lay-id="user"] .layui-table').addClass('layui-table1');
+		layui.$('.layui-table-page').css({'text-align':'center','height':'40px'});
+	}
+});
+
+layui.form.render();
+
+layui.form.on('submit(data-search-btn)', function (data) {
+	var result = JSON.stringify(data.field);
+	//执行搜索重载
+	layui.table.reload('search', {
+		page: {
+			curr: 1
+		}
+		, where: {
+			key: result
+		}
+	}, 'data');
+
+	return false;
+});
+
+layui.form.on('switch(sexDemo)', function(obj){
+	var status;
+	if(obj.elem.checked==true){
+		status=1;
+	}else{
+		status=0;
+	}
+	layui.$.ajax({
+		type: 'POST',//方法类型
+		dataType: "json",//预期服务器返回的数据类型
+		url: '/web0406/admin/api_wzb.php?method=6',
+		data: "id="+this.value+"&status="+status,
+		success: function (result) {
+			if (result.code == 0) {
+				layui.layer.tips('修改成功', obj.othis);
+			}else{
+				layui.layer.tips('修改失败', obj.othis);
+			}
+		},
+		error: function(e) {
+			layui.layer.msg("网络错误!");
+		}
+	});
+	
+  });
+
+</script>
