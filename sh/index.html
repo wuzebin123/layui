@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" /> 
+  <meta name="referrer" content="never" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>主播筛选系统</title>
+  <meta name="robots" content="max-image-preview:large" />
+  <link rel="stylesheet" id="wp-block-library-css" href="static/css/style.min.css" type="text/css" media="all" />
+  <link rel="stylesheet" id="style-css" href="static/css/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" id="font-css" href="static/css/font_2569006_kbdm9t7c1n.css" type="text/css" media="all" />
+  <link rel="stylesheet" id="swiper-css" href="static/css/swiper-bundle.min.css" type="text/css" media="all" />
+  <script type="text/javascript" src="static/js/jquery.min.js" id="jquery-js"></script>
+ </head> 
+ <body class="post-template-default single single-post postid-3611 single-format-standard">
+  <section id="warp"> 
+  
+  
+   <div class="swiper-container"> 
+    <div class="swiper-wrapper"> 
+	
+	
+
+
+
+
+	 
+
+    </div> 
+    <div class="swiper-pagination"></div> 
+   </div> 
+   
+   
+   
+   <div class="sidebar" style="bottom: 1rem;"> 
+    <ul class="sidebar-content"> 
+     <li class="logo"><img src="static/picture/logo.jpg" /></li> 
+     <li><a href="javascript:void(0);" data-action="up" data-id="3611" class="likes "><i class="nmb a-guanzhu" style="text-shadow: 1px 1px 1px black;"></i></a></li> 
+     <li class="shuaxin"><a onclick="RefreshLiveImg();"><i class="nmb a-shuaxin" style="text-shadow: 1px 1px 1px black;"></i></a></li> 
+     <li class="kwai"><a href="#" data-btn="copy" data-clipboard-target="article.copy"><i class="nmb a-share" style="text-shadow: 1px 1px 1px black;"></i></a></li>
+     <!-- <li><a href="javascript:void(0);" onclick="so()"><i class="nmb a-so"></i></a></li>  -->
+     <!-- <li><a href="m/index.html" onclick="down()"><i class="nmb a-down"></i></a></li>  -->
+	</ul> 
+   </div> 
+   <div class="sidebar1" style="position: absolute;left: 1rem;bottom: 3rem;width: 80%;color: #fff;z-index: 998;height: auto;"> 
+		<div class="anchor-name" style="color: #fff;text-shadow: 3px 2px 6px black;font-size: 1.8rem;font-weight: bold;margin-bottom: 0.05rem;">@暂时无主播</div>
+		<div class="anchor-autograph"style="font-size: 1.4rem;text-shadow: 2px 2px 4px black;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">欢迎来到美丽的网络世界太刺激了下次有时间还想来</div>
+   </div>
+  </section>
+  <footer> 
+   <div class="info"> 
+    <div class="info-content"> 
+     <div class="info-search"> 
+     </div> 
+    </div> 
+    <div class="info-close"> 
+     <a href="javascript:void(0);" onclick="so()"><i class="nmb a-shang"></i></a> 
+    </div> 
+   </div>
+  </footer>
+ </body>
+
+<script src="../lib/layui-v2.5.5/layui.all.js" charset="utf-8"></script>
+<script src="../js/lay-config.js?v=2.0.0" charset="utf-8"></script>
+<script type="text/html" id="Anchor">
+	<div class="swiper-slide">
+		<img src="{{d.img[0]}}" userid="{{d.user_id}}" i="{{d.i}}" data="{{encodeURIComponent(JSON.stringify(d))}}" class="swiper-lazy swiper-lazy-loaded" />
+	</div> 
+</script>
+
+<script>
+UpAnchor();
+function UpAnchor(){
+	layui.$.ajax({
+		type: 'POST',//方法类型
+		dataType: "json",//预期服务器返回的数据类型
+		url: '/web0406/admin/api.php?method=get_anchor',
+		success: function (result) {
+			if (result.code == 0) {
+				//layui.layer.msg(result.error_msg);
+				if(result.data.length<=0){
+					layui.layer.msg("暂无更多主播!");
+				}
+				
+				for(var i in result.data){
+					var TempD=layui.$('.swiper-wrapper .swiper-slide:last img')
+					var Temp=TempD.attr('i');
+					var TempI=-1;
+					if(Temp==undefined || Temp=='undefined' || Temp==null || Temp==''){
+						TempI=-1;
+						$('.sidebar1 .anchor-name').html(result.data[i].name+" "+result.data[i].user_id);
+						$('.sidebar1 .anchor-autograph').html(result.data[i].autograph);
+						$('.sidebar .sidebar-content .logo img').attr('src',result.data[i].head);
+						$('.sidebar .sidebar-content .kwai a').attr('href','kwai://profile/'+result.data[i].user_id);
+						if(result.data[i].img.length==1){
+							$('.sidebar .sidebar-content .shuaxin i').css('color','#b3b1b1');
+						}else{
+							$('.sidebar .sidebar-content .shuaxin i').css('color','#fff');
+						}
+
+						
+					}else{
+						TempI=parseInt(Temp);
+						if(i==0){
+							console.log('我是有了之后第一次');
+							var tempData=$('.swiper-slide-active img').attr('data');
+							if(tempData=='{}' || tempData=='' || tempData==null || tempData==undefined || tempData=='undefined'){
+								return;
+							}
+							var AnchorData=JSON.parse(decodeURIComponent(tempData));
+							AnchorData.last=false
+							TempD.attr('data',encodeURIComponent(JSON.stringify(AnchorData)))
+						}
+					}
+
+					TempI=parseInt(TempI)+1;
+					
+					NOWI=parseInt(i)+1;
+					if(NOWI==result.data.length){
+						result.data[i].last=true;
+					}else{
+						result.data[i].last=false;
+					}
+					result.data[i].i=TempI;
+					result.data[i].state=0;
+					result.data[i].examine=0;
+					layui.laytpl(Anchor.innerHTML).render(result.data[i], function(html){
+						layui.$('.swiper-wrapper').append(html);
+					});
+				}
+			}else{
+				layui.layer.msg("获取失败!");
+			}
+		},
+		error: function(e) {
+			layui.layer.msg("网络错误!");
+		}
+	});
+}
+function UpShAnchor(imgy){//审核完成
+	var tempData=imgy.attr('data');
+	if(tempData=='{}' || tempData=='' || tempData==null || tempData==undefined || tempData=='undefined'){
+		return;
+	}
+	var AnchorData=JSON.parse(decodeURIComponent(tempData));
+	console.log('genjiezao',AnchorData.examine,AnchorData.last);
+	if(AnchorData.examine==0){
+		var NowData=$('.swiper-slide-active img').attr('data');
+		if(NowData=='{}' || NowData=='' || NowData==null || NowData==undefined || NowData=='undefined'){
+			return;
+		}
+		var NowAnchorData=JSON.parse(decodeURIComponent(NowData));
+		if(NowAnchorData.last){
+			setTimeout("UpAnchor()",1); 
+		}
+		layui.$.ajax({
+			type: 'POST',//方法类型
+			dataType: "json",//预期服务器返回的数据类型
+			url: '/web0406/admin/api.php?method=set_examine&user_id='+AnchorData.user_id,
+			success: function (result) {
+				if (result.code == 0) {
+					AnchorData.examine=1
+					imgy.attr('data',encodeURIComponent(JSON.stringify(AnchorData)))//更新审核状态
+				}else{
+					layui.layer.msg("审核失败!");
+				}
+			},
+			error: function(e) {
+				layui.layer.msg("网络错误!");
+			}
+		});
+	}
+}
+
+
+
+function UpFhAnchor(state){//符合完成点赞
+	var tempData=$('.swiper-slide-active img').attr('data');
+	if(tempData=='{}' || tempData=='' || tempData==null || tempData==undefined || tempData=='undefined'){
+		return;
+	}
+	var AnchorData=JSON.parse(decodeURIComponent(tempData));
+	layui.$.ajax({
+		type: 'POST',//方法类型
+		dataType: "json",//预期服务器返回的数据类型
+		url: '/web0406/admin/api.php?method=set_status&user_id='+AnchorData.user_id+"&status="+state,
+		success: function (result) {
+			if (result.code == 0){
+				AnchorData.state=state
+				$('.swiper-slide-active img').attr('data',encodeURIComponent(JSON.stringify(AnchorData)))//更新点赞状态
+			}else{
+				layui.layer.msg("点赞失败!");
+			}
+		},
+		error: function(e) {
+			layui.layer.msg("网络错误!");
+		}
+	});
+}
+
+function RefreshLiveImg(){//切换图片
+
+	var tempData=$('.swiper-slide-active img').attr('data');
+	if(tempData=='{}' || tempData=='' || tempData==null || tempData==undefined || tempData=='undefined'){
+		return;
+	}
+	var AnchorData=JSON.parse(decodeURIComponent(tempData));
+	var NowImg=$('.swiper-slide-active img').attr('src');
+	if(AnchorData.img.length<=1){
+		return;
+	}
+	for(var i in AnchorData.img){
+		if(AnchorData.img[i]==NowImg){
+			var ImgI=parseInt(i)+parseInt(1);
+			if(ImgI==AnchorData.img.length){
+				ImgI=0;
+			}
+			$('.swiper-slide-active img').attr('src',AnchorData.img[ImgI]);
+		}
+	}
+}
+
+</script>
+<script type="text/javascript" src="static/js/ycsd.min.js" id="ycsd-js"></script>
+<script type="text/javascript" src="static/js/lazysizes.min.js" id="lazysizes-js"></script>
+<script type="text/javascript" src="static/js/jquery.superslide.js" id="superslide-js"></script>
+<script type="text/javascript" src="static/js/swiper-bundle.min.js" id="swiper-js"></script>
+<script type="text/javascript" src="static/js/ycsd.steal.js" id="steal-js"></script>  
+
+</html>
